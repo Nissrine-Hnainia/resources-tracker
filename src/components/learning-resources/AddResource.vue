@@ -3,7 +3,7 @@
         <form @submit.prevent="addNewResource">
             <div class="form-control">
                 <label for="title">Title</label>
-                <input id="title" name="title" type="text" v-model="newTitle" />
+                <input id="title" name="title" type="text" ref="newTitle" />
             </div>
             <div class="form-control">
                 <label for="description">Description</label>
@@ -11,13 +11,13 @@
                     id="description"
                     name="description"
                     rows="3"
-                    v-model="newDescription"
+                    ref="newDescription"
                 >
                 </textarea>
             </div>
             <div class="form-control">
                 <label for="link">Link</label>
-                <input id="link" name="link" type="url" v-model="newLink" />
+                <input id="link" name="link" type="url" ref="newLink" />
             </div>
             <div>
                 <base-button type="submit">Add Resource</base-button>
@@ -28,24 +28,16 @@
 
 <script>
 export default {
-    data() {
-        return {
-            newTitle: '',
-            newDescription: '',
-            newLink: '',
-        };
-    },
+    inject: ['addResource'],
     methods: {
         addNewResource() {
-            this.$emit(
-                'add-new-resource',
-                this.newTitle,
-                this.newDescription,
-                this.newLink
-            );
+            const titleInput = this.$refs.newTitle.value;
+            const descriptionInput = this.$refs.newDescription.value;
+            const linkInput = this.$refs.newLink.value;
+
+            this.addResource(titleInput, descriptionInput, linkInput);
         },
     },
-    emits: ['add-new-resource'],
 };
 </script>
 
