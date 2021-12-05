@@ -1,4 +1,17 @@
 <template>
+    <base-dialog
+        v-if="inputInvalid"
+        title="Invalid Input"
+        @close-dialog="checkOut"
+    >
+        <template #default>
+            <p>At least one of your inputs is empty</p>
+            <p>Please, make sure to add a value for each input</p>
+        </template>
+        <template #actions>
+            <base-button @click="checkOut"> close </base-button>
+        </template>
+    </base-dialog>
     <base-card>
         <form @submit.prevent="addNewResource">
             <div class="form-control">
@@ -27,15 +40,33 @@
 </template>
 
 <script>
+import BaseButton from '../UI/BaseButton.vue';
 export default {
+    components: { BaseButton },
     inject: ['addResource'],
+    data() {
+        return {
+            inputInvalid: false,
+        };
+    },
     methods: {
         addNewResource() {
             const titleInput = this.$refs.newTitle.value;
             const descriptionInput = this.$refs.newDescription.value;
             const linkInput = this.$refs.newLink.value;
 
+            if (
+                titleInput.trim() === '' ||
+                descriptionInput.trim() === '' ||
+                linkInput.trim() === ''
+            ) {
+                this.inputInvalid = true;
+                return;
+            }
             this.addResource(titleInput, descriptionInput, linkInput);
+        },
+        checkOut() {
+            this.inputInvalid = false;
         },
     },
 };
